@@ -16,10 +16,15 @@ type Options = {
   version: string;
   tools: Tool[];
   resources: Resource[];
+  /** Exact WebSocket port; by default the first free one in the extension's range. */
+  port?: number;
+  token: string;
 };
 
-export async function createServerWithTools(options: Options): Promise<Server> {
-  const { name, version, tools, resources } = options;
+export async function createServerWithTools(
+  options: Options,
+): Promise<{ server: Server; port: number }> {
+  const { name, version, tools, resources, port, token } = options;
   const context = new Context();
   const server = new Server(
     { name, version },
@@ -31,13 +36,10 @@ export async function createServerWithTools(options: Options): Promise<Server> {
     },
   );
 
-  const wss = await createWebSocketServer();
-  wss.on("connection", (websocket) => {
-    // Close any existing connections
-    if (context.hasWs()) {
-      context.ws.close();
-    }
-    context.ws = websocket;
+  const { wss, port: wsPort } = await createWebSocketServer({
+    port,
+    token,
+    onConnection: (websocket) => context.attach(websocket),
   });
 
   server.setRequestHandler(ListToolsRequestSchema, async () => {
@@ -82,11 +84,12 @@ export async function createServerWithTools(options: Options): Promise<Server> {
     return { contents };
   });
 
+  const closeServer = server.close.bind(server);
   server.close = async () => {
-    await server.close();
+    await closeServer();
     await wss.close();
     await context.close();
   };
 
-  return server;
+  return { server, port: wsPort };
 }

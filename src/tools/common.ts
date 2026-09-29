@@ -1,3 +1,5 @@
+import { setTimeout as sleep } from "node:timers/promises";
+
 import { zodToJsonSchema } from "zod-to-json-schema";
 
 import {
@@ -6,8 +8,7 @@ import {
   NavigateTool,
   PressKeyTool,
   WaitTool,
-} from "@repo/types/mcp/tool";
-
+} from "@/tools/schemas";
 import { captureAriaSnapshot } from "@/utils/aria-snapshot";
 
 import type { Tool, ToolFactory } from "./tool";
@@ -85,9 +86,9 @@ export const wait: Tool = {
     description: WaitTool.shape.description.value,
     inputSchema: zodToJsonSchema(WaitTool.shape.arguments),
   },
-  handle: async (context, params) => {
+  handle: async (_context, params) => {
     const { time } = WaitTool.shape.arguments.parse(params);
-    await context.sendSocketMessage("browser_wait", { time });
+    await sleep(time * 1000);
     return {
       content: [
         {

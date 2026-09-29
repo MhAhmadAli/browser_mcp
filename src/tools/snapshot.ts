@@ -1,5 +1,6 @@
 import zodToJsonSchema from "zod-to-json-schema";
 
+import type { Context } from "@/context";
 import {
   ClickTool,
   DragTool,
@@ -7,9 +8,7 @@ import {
   SelectOptionTool,
   SnapshotTool,
   TypeTool,
-} from "@repo/types/mcp/tool";
-
-import type { Context } from "@/context";
+} from "@/tools/schemas";
 import { captureAriaSnapshot } from "@/utils/aria-snapshot";
 
 import type { Tool } from "./tool";
@@ -105,7 +104,7 @@ export const type: Tool = {
       content: [
         {
           type: "text",
-          text: `Typed "${validatedParams.text}" into "${validatedParams.element}"`,
+          text: `Typed text into "${validatedParams.element}"`,
         },
         ...snapshot.content,
       ],

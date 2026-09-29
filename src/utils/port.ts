@@ -1,4 +1,3 @@
-import { execSync } from "node:child_process";
 import net from "node:net";
 
 export async function isPortInUse(port: number): Promise<boolean> {
@@ -8,20 +7,6 @@ export async function isPortInUse(port: number): Promise<boolean> {
     server.once("listening", () => {
       server.close(() => resolve(false)); // Port is free
     });
-    server.listen(port);
+    server.listen(port, "127.0.0.1");
   });
-}
-
-export function killProcessOnPort(port: number) {
-  try {
-    if (process.platform === "win32") {
-      execSync(
-        `FOR /F "tokens=5" %a in ('netstat -ano ^| findstr :${port}') do taskkill /F /PID %a`,
-      );
-    } else {
-      execSync(`lsof -ti:${port} | xargs kill -9`);
-    }
-  } catch (error) {
-    console.error(`Failed to kill process on port ${port}:`, error);
-  }
 }

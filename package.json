@@ -13,8 +13,9 @@
     "dist"
   ],
   "scripts": {
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p extension",
     "build": "tsup src/index.ts --format esm && shx chmod +x dist/*.js",
+    "build:extension": "tsup extension/src/background.ts extension/src/popup.ts --format esm --platform browser --target es2022 --no-splitting --clean --tsconfig extension/tsconfig.json --out-dir extension/dist && shx cp extension/manifest.json extension/popup.html extension/dist/",
     "prepare": "npm run build",
     "watch": "tsup src/index.ts --format esm --watch ",
     "inspector": "CLIENT_PORT=9001 SERVER_PORT=9002 pnpx @modelcontextprotocol/inspector node dist/index.js"
@@ -27,11 +28,8 @@
     "zod-to-json-schema": "^3.24.3"
   },
   "devDependencies": {
-    "@r2r/messaging": "workspace:*",
-    "@repo/config": "workspace:*",
-    "@repo/messaging": "workspace:*",
-    "@repo/types": "workspace:*",
-    "@repo/utils": "workspace:*",
+    "@types/chrome": "^0.3.4",
+    "@types/node": "^22.20.4",
     "@types/ws": "^8.18.0",
     "shx": "^0.3.4",
     "tsup": "^8.4.0",
