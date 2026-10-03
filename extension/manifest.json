@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "Browser MCP",
+  "version": "0.1.3",
+  "description": "Lets your local Browser MCP server control a tab you connect.",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA9pr1wwPpIcgbMi+xLTXPdC92xnhqql+2K835qgSl100XsNliziixEVFuCOegCBBmkjwKR+zS0jM0WzenZn1YGTGFhhoUeKzQfwKRTnKB0R8S56yqiPNtGvfBKIm6yKNPPFFBTowlkEWdPF7KypK+fGhxDggfKKFldjxLpBL79Bvr09GGKb6s4gZSJgZKywAWFKlD7AnbCcQwWoxAmcNZ3pgGA9pfl+i84+LOIS21M+cvu2mkBsjY8vkDMOfgF7zqNOfe8Vfhwb/XdiWWx8WCFJpgfGJ/gVV20GmfiT6BqDnh6dTfjV27Z59XkB9ptItpKE0rb5+47+C5Pkz2tVs+BQIDAQAB",
+  "minimum_chrome_version": "116",
+  "permissions": ["alarms", "debugger", "storage"],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "Browser MCP",
+    "default_popup": "popup.html"
+  }
+}

@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Browser MCP</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --fg: #1f2328;
+        --muted: #59636e;
+        --border: #d1d9e0;
+        --accent: #0969da;
+        --ok: #1a7f37;
+        --warn: #9a6700;
+        --danger: #d1242f;
+        --bg: #ffffff;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --fg: #f0f6fc;
+          --muted: #9198a1;
+          --border: #3d444d;
+          --accent: #4493f8;
+          --ok: #3fb950;
+          --warn: #d29922;
+          --danger: #f85149;
+          --bg: #151b23;
+        }
+      }
+      body {
+        width: 300px;
+        margin: 0;
+        padding: 14px;
+        font: 13px/1.45 system-ui, sans-serif;
+        color: var(--fg);
+        background: var(--bg);
+      }
+      h1 {
+        margin: 0 0 10px;
+        font-size: 14px;
+      }
+      p {
+        margin: 0 0 12px;
+      }
+      .status {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .status::before {
+        content: "";
+        flex: none;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--muted);
+      }
+      .status[data-status="connected"]::before {
+        background: var(--ok);
+      }
+      .status[data-status="connecting"]::before {
+        background: var(--warn);
+      }
+      .error {
+        color: var(--danger);
+      }
+      .actions {
+        display: flex;
+        gap: 8px;
+      }
+      button {
+        padding: 6px 12px;
+        font: inherit;
+        color: var(--fg);
+        background: transparent;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      button.primary {
+        color: #ffffff;
+        background: var(--accent);
+        border-color: var(--accent);
+      }
+      button:disabled {
+        opacity: 0.5;
+        cursor: default;
+      }
+      details {
+        margin-top: 14px;
+        padding-top: 10px;
+        border-top: 1px solid var(--border);
+      }
+      summary {
+        color: var(--muted);
+        cursor: pointer;
+      }
+      label {
+        display: block;
+        margin: 10px 0 4px;
+      }
+      input {
+        box-sizing: border-box;
+        width: 100%;
+        padding: 5px 8px;
+        font: inherit;
+        color: var(--fg);
+        background: transparent;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+      }
+      .hint {
+        margin: 6px 0 0;
+        color: var(--muted);
+      }
+      code {
+        font: 12px ui-monospace, monospace;
+      }
+      .save {
+        margin: 12px 0 0;
+      }
+      .saved {
+        margin-left: 8px;
+        color: var(--ok);
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Browser MCP</h1>
+    <p id="status" class="status" data-status="disconnected">Not connected</p>
+    <p id="error" class="error" hidden></p>
+    <div class="actions">
+      <button id="connect" class="primary" type="button">Connect</button>
+      <button id="disconnect" type="button" hidden>Disconnect</button>
+    </div>
+    <details id="settings">
+      <summary>Settings</summary>
+      <form id="settings-form">
+        <label for="token">Pairing token</label>
+        <input id="token" type="password" autocomplete="off" spellcheck="false" />
+        <p class="hint">
+          Get it by running <code>node dist/index.js token</code> in the server
+          folder.
+        </p>
+        <label for="port">First port</label>
+        <input id="port" type="number" min="1" max="65535" />
+        <p class="hint">
+          Connects to servers on this port and the 9 after it, so several
+          chats can share the tab.
+        </p>
+        <p class="save">
+          <button type="submit">Save</button>
+          <span id="saved" class="saved" hidden>Saved</span>
+        </p>
+      </form>
+    </details>
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>
